@@ -35,8 +35,14 @@ export interface NVMediaConfig {
      *
      */
     options?: NVMediaOptions;
+
+    insert?: NVMediaInsertConfig;
 }
 
 export interface NVMediaOptions extends Record<string, unknown> {
 	noCache?: boolean;
+}
+
+export interface NVMediaInsertConfig {
+    integrations?: Array<string>;
 }

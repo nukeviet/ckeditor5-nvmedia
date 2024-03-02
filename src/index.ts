@@ -12,10 +12,11 @@
  */
 
 export { default as NVMedia } from './nvmedia.js';
+export { default as NVMediaUtils } from './nvmediauntils.js';
 export { default as NVMediaEditing } from './nvmediaediting.js';
-export { default as NVMediaUI } from './nvmediaui.js';
+export { default as NVMediaInsertUI } from './nvmediainsertui.js';
 
 export type { NVMediaConfig } from './nvmediaconfig.js';
-export type { default as NVMediaCommand } from './nvmediacommand.js';
+export type { default as NVMediaInsertCommand } from './nvmediainsertcommand.js';
 
 import './augmentation.js';

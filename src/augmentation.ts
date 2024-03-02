@@ -9,7 +9,8 @@
 
 import type {
 	NVMedia,
-	NVMediaCommand,
+	NVMediaUtils,
+	NVMediaInsertCommand,
 	NVMediaConfig,
 	NVMediaEditing,
 } from './index.js';
@@ -24,10 +25,11 @@ declare module '@ckeditor/ckeditor5-core' {
 
 	interface PluginsMap {
 		[NVMedia.pluginName]: NVMedia;
+		[NVMediaUtils.pluginName]: NVMediaUtils;
 		[NVMediaEditing.pluginName]: NVMediaEditing;
 	}
 
 	interface CommandsMap {
-		nvmedia: NVMediaCommand;
+		nvmedia: NVMediaInsertCommand;
 	}
 }

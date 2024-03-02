@@ -13,7 +13,7 @@ import { Command, type Editor } from 'ckeditor5/src/core.js';
 
 import type { Notification } from 'ckeditor5/src/ui.js';
 
-export default class NVMediaCommand extends Command {
+export default class NVMediaInsertCommand extends Command {
 	constructor(editor: Editor) {
 		super(editor);
 
@@ -31,11 +31,7 @@ export default class NVMediaCommand extends Command {
 	 * @inheritDoc
 	 */
 	public override refresh(): void {
-		const imageCommand = this.editor.commands.get('insertImage')!;
-		const linkCommand = this.editor.commands.get('link')!;
-
-		// The NVMedia command is enabled when one of image or link command is enabled.
-		this.isEnabled = imageCommand.isEnabled || linkCommand.isEnabled;
+		this.isEnabled = true;
 	}
 
 	/**

@@ -8,7 +8,7 @@
  */
 
 import { Plugin } from 'ckeditor5/src/core.js';
-import NVMediaUI from './nvmediaui.js';
+import NVMediaInsertUI from './nvmediainsertui.js';
 import NVMediaEditing from './nvmediaediting.js';
 
 export default class NVMedia extends Plugin {
@@ -23,6 +23,6 @@ export default class NVMedia extends Plugin {
      * @inheritDoc
      */
     static get requires() {
-        return [NVMediaEditing, NVMediaUI] as const;
+        return [NVMediaEditing, NVMediaInsertUI] as const;
     }
 }
