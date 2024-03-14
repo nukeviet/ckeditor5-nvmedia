@@ -1,6 +1,6 @@
 {
   "name": "@nukeviet/ckeditor5-nvmedia",
-  "version": "41.1.0",
+  "version": "41.2.0",
   "description": "Insert audio and media for NukeViet.",
   "keywords": [
     "nukeviet",
@@ -14,12 +14,12 @@
   "type": "module",
   "main": "src/index.js",
   "dependencies": {
-    "ckeditor5": "41.1.0"
+    "ckeditor5": "41.2.0"
   },
   "devDependencies": {
-    "@ckeditor/ckeditor5-core": "41.1.0",
-    "@ckeditor/ckeditor5-ui": "41.1.0",
-    "@ckeditor/ckeditor5-utils": "41.1.0",
+    "@ckeditor/ckeditor5-core": "41.2.0",
+    "@ckeditor/ckeditor5-ui": "41.2.0",
+    "@ckeditor/ckeditor5-utils": "41.2.0",
     "typescript": "5.0.4"
   },
   "author": "VINADES.,JSC (https://vinades.vn/)",
