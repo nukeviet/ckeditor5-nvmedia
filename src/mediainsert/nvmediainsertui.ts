@@ -19,15 +19,14 @@ import {
     type DropdownButtonView,
     type FocusableView
 } from 'ckeditor5/src/ui.js';
-import mediaIcon from '../theme/icons/media.svg';
 import {
     logWarning,
     type Observable,
     type Locale,
 } from 'ckeditor5/src/utils.js';
-import NVMediaUtils from './nvmediauntils.js';
 
-import type NVMediaInsertCommand from './nvmediainsertcommand.js';
+import NVMediaInsertFormView from './ui/nvmediainsertformview.js';
+import NVMediaUtils from '../nvmediauntils.js';
 
 export default class NVMediaInsertUI extends Plugin {
     /**
@@ -48,6 +47,11 @@ export default class NVMediaInsertUI extends Plugin {
      * Các phương thức tích hợp nút chèn media
      */
     private _integrations = new Map<string, IntegrationData>();
+
+    /**
+     *
+     */
+    public dropdownView?: DropdownView;
 
     /**
      * Đối tượng đang chọn có phải video hoặc audio hay không
@@ -90,6 +94,35 @@ export default class NVMediaInsertUI extends Plugin {
     }
 
     /**
+    * Nhận các tích hợp
+    */
+    public registerIntegration({
+        name,
+        observable,
+        buttonViewCreator,
+        formViewCreator,
+        requiresForm
+    }: {
+        name: string;
+        observable: Observable & { isEnabled: boolean };
+        buttonViewCreator: (isOnlyOne: boolean) => ButtonView;
+        formViewCreator: (isOnlyOne: boolean) => FocusableView;
+        requiresForm?: boolean;
+    }): void {
+        // Check trùng
+        if (this._integrations.has(name)) {
+            logWarning('nvmedia-insert-integration-exists', { name });
+        }
+
+        this._integrations.set(name, {
+            observable,
+            buttonViewCreator,
+            formViewCreator,
+            requiresForm: !!requiresForm
+        });
+    }
+
+    /**
      * Thiết lập nút chèn media: Tùy thuộc vào config mà có dropdown hay không.
      */
     private _createToolbarComponent(locale: Locale): DropdownView | FocusableView {
@@ -124,7 +157,7 @@ export default class NVMediaInsertUI extends Plugin {
             );
         }
 
-        const dropdownView = createDropdown(locale, dropdownButton);
+        const dropdownView = this.dropdownView = createDropdown(locale, dropdownButton);
         const observables = integrations.map(({ observable }) => observable);
 
         dropdownView.bind('isEnabled').toMany(observables, 'isEnabled', (...isEnabled) => (

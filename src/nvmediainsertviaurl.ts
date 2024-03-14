@@ -9,21 +9,20 @@
 
 import { Plugin } from 'ckeditor5/src/core.js';
 import NVMediaInsertUI from './mediainsert/nvmediainsertui.js';
-import NVMediaEditing from './nvmediaediting.js';
-import NVMediaInsertViaUrl from './nvmediainsertviaurl.js';
+import NVMediaInsertViaUrlUI from './mediainsert/nvmediainsertviaurlui.js';
 
-export default class NVMedia extends Plugin {
+export default class NVMediaInsertViaUrl extends Plugin {
     /**
      * @inheritDoc
      */
-    static get pluginName() {
-        return 'NVMedia' as const;
+    public static get pluginName() {
+        return 'NVMediaInsertViaUrl' as const;
     }
 
     /**
      * @inheritDoc
      */
-    static get requires() {
-        return [NVMediaEditing, NVMediaInsertUI, NVMediaInsertViaUrl] as const;
+    public static get requires() {
+        return [NVMediaInsertViaUrlUI, NVMediaInsertUI] as const;
     }
 }
