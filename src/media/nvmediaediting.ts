@@ -11,7 +11,8 @@
 
 import { Plugin } from 'ckeditor5/src/core.js';
 import { Notification } from 'ckeditor5/src/ui.js';
-import NVMediaInsertCommand from './nvmediainsertcommand.js';
+import InsertNVMediaCommand from './insertnvmediacommand.js';
+import ReplaceNVMediaSourceCommand from './replacenvmediasourcecommand.js';
 
 export default class NVMediaEditing extends Plugin {
 	/**
@@ -33,6 +34,7 @@ export default class NVMediaEditing extends Plugin {
 	 */
 	public init(): void {
 		const editor = this.editor;
-		editor.commands.add('nvmediaInsert', new NVMediaInsertCommand(editor));
+		editor.commands.add('insertNVMedia', new InsertNVMediaCommand(editor));
+		editor.commands.add('replaceNVMediaSource', new ReplaceNVMediaSourceCommand(editor));
 	}
 }

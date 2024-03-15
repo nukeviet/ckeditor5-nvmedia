@@ -12,13 +12,13 @@
  */
 
 export { default as NVMedia } from './nvmedia.js';
+export { default as NVMediaEditing } from './media/nvmediaediting.js';
 export { default as NVMediaUtils } from './nvmediauntils.js';
-export { default as NVMediaEditing } from './nvmediaediting.js';
+export { default as NVMediaInsert } from './nvmediainsert.js';
 export { default as NVMediaInsertUI } from './mediainsert/nvmediainsertui.js';
 export { default as NVMediaInsertViaUrl } from './nvmediainsertviaurl.js';
 
 export type { NVMediaConfig } from './nvmediaconfig.js';
-export type { default as NVMediaInsertCommand } from './nvmediainsertcommand.js';
 export type { default as ReplaceNVMediaSourceCommand } from './media/replacenvmediasourcecommand.js';
 export type { default as InsertNVMediaCommand } from './media/insertnvmediacommand.js';
 

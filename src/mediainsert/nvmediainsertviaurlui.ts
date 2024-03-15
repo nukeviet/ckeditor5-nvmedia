@@ -13,7 +13,6 @@ import { ButtonView, CollapsibleView, DropdownButtonView, type FocusableView } f
 import mediaIcon from '../../theme/icons/media.svg';
 
 import NVMediaInsertUI from './nvmediainsertui.js';
-import NVMediaInsertCommand from '../nvmediainsertcommand.js';
 
 import type ReplaceNVMediaSourceCommand from '../media/replacenvmediasourcecommand.js';
 import type InsertNVMediaCommand from '../media/insertnvmediacommand.js';
@@ -40,12 +39,11 @@ export default class NVMediaInsertViaUrlUI extends Plugin {
      * @inheritDoc
      */
     public afterInit(): void {
+        console.log('afterInit NVMediaInsertViaUrlUI');
         this._mediaInsertUI = this.editor.plugins.get('NVMediaInsertUI');
-        const insertMediaCommand: NVMediaInsertCommand = this.editor.commands.get('nvmediaInsert')!;
-
         this._mediaInsertUI.registerIntegration({
             name: 'url',
-            observable: insertMediaCommand,
+            observable: () => this.editor.commands.get('insertNVMedia')!,
             requiresForm: true,
             buttonViewCreator: isOnlyOne => this._createInsertUrlButton(isOnlyOne),
             formViewCreator: isOnlyOne => this._createInsertUrlView(isOnlyOne)

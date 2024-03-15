@@ -23,10 +23,11 @@ export default class InsertNVMediaCommand extends Command {
 	 */
 	public override refresh(): void {
         // FIXME
-        //this.isEnabled = ????
+        this.isEnabled = true;
     }
 
     public override execute( options: { source: ArrayOrItem<string | Record<string, unknown>> } ): void {
         // FIXME
+        console.log('execute InsertNVMediaCommand');
     }
 }

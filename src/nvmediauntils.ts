@@ -22,7 +22,6 @@ export default class NVMediaUtils extends Plugin {
 
     public isMedia(modelElement?: Element | null): modelElement is Element & { name: 'video' | 'audio' } {
         // FIXME
-        console.log(modelElement);
         return !!modelElement && (modelElement.is('element', 'video') || modelElement.is('element', 'audio'));
     }
 }

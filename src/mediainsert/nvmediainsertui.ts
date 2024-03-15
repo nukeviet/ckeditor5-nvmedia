@@ -76,6 +76,8 @@ export default class NVMediaInsertUI extends Plugin {
      * @inheritDoc
      */
     public init(): void {
+        console.log('NVMediaInsertUI init');
+
         const editor = this.editor;
         const selection = editor.model.document.selection;
         const mediaUtils: NVMediaUtils = editor.plugins.get('NVMediaUtils');
@@ -104,7 +106,7 @@ export default class NVMediaInsertUI extends Plugin {
         requiresForm
     }: {
         name: string;
-        observable: Observable & { isEnabled: boolean };
+        observable: Observable & { isEnabled: boolean } | (() => Observable & { isEnabled: boolean });
         buttonViewCreator: (isOnlyOne: boolean) => ButtonView;
         formViewCreator: (isOnlyOne: boolean) => FocusableView;
         requiresForm?: boolean;
@@ -158,7 +160,7 @@ export default class NVMediaInsertUI extends Plugin {
         }
 
         const dropdownView = this.dropdownView = createDropdown(locale, dropdownButton);
-        const observables = integrations.map(({ observable }) => observable);
+        const observables = integrations.map(({ observable }) => typeof observable == 'function' ? observable() : observable);
 
         dropdownView.bind('isEnabled').toMany(observables, 'isEnabled', (...isEnabled) => (
             isEnabled.some(isEnabled => isEnabled)
@@ -208,7 +210,7 @@ export default class NVMediaInsertUI extends Plugin {
 }
 
 type IntegrationData = {
-    observable: Observable & { isEnabled: boolean };
+    observable: Observable & { isEnabled: boolean } | (() => Observable & { isEnabled: boolean });
     buttonViewCreator: (isOnlyOne: boolean) => ButtonView;
     formViewCreator: (isOnlyOne: boolean) => FocusableView;
     requiresForm: boolean;

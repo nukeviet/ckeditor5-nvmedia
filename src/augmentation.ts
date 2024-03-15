@@ -9,11 +9,11 @@
 
 import type {
 	NVMedia,
+	NVMediaEditing,
 	NVMediaUtils,
-	NVMediaInsertCommand,
+	NVMediaInsert,
 	NVMediaInsertViaUrl,
 	NVMediaConfig,
-	NVMediaEditing,
 	NVMediaInsertUI,
 	ReplaceNVMediaSourceCommand,
 	InsertNVMediaCommand,
@@ -29,14 +29,14 @@ declare module '@ckeditor/ckeditor5-core' {
 
 	interface PluginsMap {
 		[NVMedia.pluginName]: NVMedia;
-		[NVMediaUtils.pluginName]: NVMediaUtils;
-		[NVMediaInsertUI.pluginName]: NVMediaInsertUI;
-		[NVMediaInsertViaUrl.pluginName]: NVMediaInsertViaUrl;
 		[NVMediaEditing.pluginName]: NVMediaEditing;
+		[NVMediaUtils.pluginName]: NVMediaUtils;
+		[NVMediaInsert.pluginName]: NVMediaInsert;
+		[NVMediaInsertViaUrl.pluginName]: NVMediaInsertViaUrl;
+		[NVMediaInsertUI.pluginName]: NVMediaInsertUI;
 	}
 
 	interface CommandsMap {
-		nvmedia: NVMediaInsertCommand;
 		replaceNVMediaSource: ReplaceNVMediaSourceCommand;
 		insertNVMedia: InsertNVMediaCommand;
 	}
