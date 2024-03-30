@@ -10,9 +10,11 @@
 import type {
 	DowncastDispatcher,
 	Element,
+	UpcastDispatcher,
+	UpcastElementEvent,
 	DowncastAttributeEvent
 } from 'ckeditor5/src/engine.js';
-import { type GetCallback } from 'ckeditor5/src/utils.js';
+import { first, type GetCallback } from 'ckeditor5/src/utils.js';
 import type NVMediaUtils from '../nvmediauntils.js';
 
 /**
@@ -40,3 +42,44 @@ export function downcastMediaAttribute(
 	};
 }
 
+/**
+ *
+ */
+export function upcastMediaFigure(mediaUtils: NVMediaUtils, mediaType: 'NVMediaVideo' | 'NVMediaAudio'): (dispatcher: UpcastDispatcher) => void {
+	const converter: GetCallback<UpcastElementEvent> = (evt, data, conversionApi) => {
+		// Không chuyển đổi nếu thẻ không phải là figure.nv-media
+		if (!conversionApi.consumable.test(data.viewItem, { name: true, classes: 'nv-media' })) {
+			return;
+		}
+
+		// Tìm thẻ video hoặc audio trong figure
+		const viewMedia = mediaUtils.findViewMediaElement(data.viewItem, mediaType);
+
+		// Không chuyển đổi nếu không tìm thấy thẻ video, audio hoặc nó đã chuyển đổi
+		if (!viewMedia || !conversionApi.consumable.test(viewMedia, { name: true })) {
+			return;
+		}
+
+		// Consume the figure to prevent other converters from processing it again.
+		conversionApi.consumable.consume(data.viewItem, { name: true, classes: 'nv-media' });
+
+		// Convert view media to model.
+		const conversionResult = conversionApi.convertItem(viewMedia, data.modelCursor);
+
+		// Lấy model được chuyển đổi
+		const modelMedia = first(conversionResult.modelRange!.getItems()) as Element;
+
+		// Chuyển không thành công thì dừng
+		if (!modelMedia) {
+			conversionApi.consumable.revert(data.viewItem, { name: true, classes: 'nv-media' });
+			return;
+		}
+
+		conversionApi.convertChildren(data.viewItem, modelMedia);
+		conversionApi.updateConversionResult(modelMedia, data);
+	};
+
+	return dispatcher => {
+		dispatcher.on<UpcastElementEvent>('element:figure', converter);
+	};
+}

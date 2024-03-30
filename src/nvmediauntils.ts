@@ -153,6 +153,10 @@ export default class NVMediaUtils extends Plugin {
     public isMediaView(tagName: 'video' | 'audio', element?: ViewElement | null): boolean {
         return !!element && element.is('element', tagName);
     }
+
+    public isBlockMediaView(element?: ViewElement | null): boolean {
+        return !!element && element.is('element', 'figure') && element.hasClass('nv-media');
+    }
 }
 
 /**

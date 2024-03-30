@@ -14,8 +14,8 @@ import { Notification } from 'ckeditor5/src/ui.js';
 import InsertNVMediaCommand from './insertnvmediacommand.js';
 import ReplaceNVMediaSourceCommand from './replacenvmediasourcecommand.js';
 import NVMediaUtils from '../nvmediauntils.js';
-import { createMediaViewElement } from './utils.js';
-import { downcastMediaAttribute } from './converters.js';
+import { createMediaViewElement, getMediaViewElementMatcher } from './utils.js';
+import { downcastMediaAttribute, upcastMediaFigure } from './converters.js';
 
 export default class NVMediaEditing extends Plugin {
 	/**
@@ -38,7 +38,6 @@ export default class NVMediaEditing extends Plugin {
 	public init(): void {
 		const editor = this.editor;
 		const schema = editor.model.schema;
-		const conversion = editor.conversion;
 
 		schema.register('NVMediaVideo', {
 			inheritAllFrom: '$blockObject',
@@ -72,14 +71,14 @@ export default class NVMediaEditing extends Plugin {
 		const conversion = editor.conversion;
 		const mediaUtils: NVMediaUtils = this.editor.plugins.get('NVMediaUtils');
 
-		// Model => figure.nv-media...
+		// Model => figure.nv-media
 		conversion.for('dataDowncast')
 			.elementToStructure({
 				model: 'NVMediaVideo',
 				view: (modelElement, { writer }) => createMediaViewElement(writer, 'NVMediaVideo')
 			});
 
-		// Model => figure.nv-media...
+		// Model => figure.nv-media
 		conversion.for('editingDowncast')
 			.elementToStructure({
 				model: 'NVMediaVideo',
@@ -90,5 +89,46 @@ export default class NVMediaEditing extends Plugin {
 
 		conversion.for('downcast')
 			.add(downcastMediaAttribute(mediaUtils, 'NVMediaVideo', 'src'));
+
+		// figure.nv-media => model
+		conversion.for('upcast')
+			.elementToElement({
+				view: getMediaViewElementMatcher(editor, 'NVMediaVideo'),
+				model: (viewMedia, { writer }) => writer.createElement(
+					'NVMediaVideo',
+					viewMedia.hasAttribute('src') ? { src: viewMedia.getAttribute('src') } : undefined
+				)
+			})
+			.add(upcastMediaFigure(mediaUtils, 'NVMediaVideo'));
+
+		// Model => figure.nv-media
+		conversion.for('dataDowncast')
+			.elementToStructure({
+				model: 'NVMediaAudio',
+				view: (modelElement, { writer }) => createMediaViewElement(writer, 'NVMediaAudio')
+			});
+
+		// Model => figure.nv-media
+		conversion.for('editingDowncast')
+			.elementToStructure({
+				model: 'NVMediaAudio',
+				view: (modelElement, { writer }) => mediaUtils.toMediaWidget(
+					createMediaViewElement(writer, 'NVMediaAudio'), writer, t('Media widget')
+				)
+			});
+
+		conversion.for('downcast')
+			.add(downcastMediaAttribute(mediaUtils, 'NVMediaAudio', 'src'));
+
+		// figure.nv-media => model
+		conversion.for('upcast')
+			.elementToElement({
+				view: getMediaViewElementMatcher(editor, 'NVMediaAudio'),
+				model: (viewMedia, { writer }) => writer.createElement(
+					'NVMediaAudio',
+					viewMedia.hasAttribute('src') ? { src: viewMedia.getAttribute('src') } : undefined
+				)
+			})
+			.add(upcastMediaFigure(mediaUtils, 'NVMediaAudio'));
 	}
 }
