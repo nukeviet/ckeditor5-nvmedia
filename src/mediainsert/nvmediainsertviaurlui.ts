@@ -39,7 +39,6 @@ export default class NVMediaInsertViaUrlUI extends Plugin {
      * @inheritDoc
      */
     public afterInit(): void {
-        console.log('afterInit NVMediaInsertViaUrlUI');
         this._mediaInsertUI = this.editor.plugins.get('NVMediaInsertUI');
         this._mediaInsertUI.registerIntegration({
             name: 'url',

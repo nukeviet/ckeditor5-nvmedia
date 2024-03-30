@@ -1,0 +1,7 @@
+.ck-content .ck-widget.nv-media video,
+.ck-content .ck-widget.nv-media audio {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}

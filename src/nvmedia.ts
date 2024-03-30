@@ -11,6 +11,8 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import NVMediaEditing from './media/nvmediaediting.js';
 import NVMediaInsertUI from './mediainsert/nvmediainsertui.js';
 
+import '../theme/nvmedia.css';
+
 export default class NVMedia extends Plugin {
     /**
      * @inheritDoc

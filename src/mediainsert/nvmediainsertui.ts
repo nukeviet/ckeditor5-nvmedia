@@ -44,11 +44,6 @@ export default class NVMediaInsertUI extends Plugin {
     }
 
     /**
-     * Các phương thức tích hợp nút chèn media
-     */
-    private _integrations = new Map<string, IntegrationData>();
-
-    /**
      *
      */
     public dropdownView?: DropdownView;
@@ -57,6 +52,11 @@ export default class NVMediaInsertUI extends Plugin {
      * Đối tượng đang chọn có phải video hoặc audio hay không
      */
     declare public isMediaSelected: boolean;
+
+    /**
+     * Các phương thức tích hợp nút chèn media
+     */
+    private _integrations = new Map<string, IntegrationData>();
 
     /**
      * @inheritDoc
@@ -76,13 +76,9 @@ export default class NVMediaInsertUI extends Plugin {
      * @inheritDoc
      */
     public init(): void {
-        console.log('NVMediaInsertUI init');
-
         const editor = this.editor;
         const selection = editor.model.document.selection;
         const mediaUtils: NVMediaUtils = editor.plugins.get('NVMediaUtils');
-        const componentFactory = editor.ui.componentFactory;
-        const t = editor.t;
 
         this.set('isMediaSelected', false);
 
@@ -92,11 +88,12 @@ export default class NVMediaInsertUI extends Plugin {
 
         const componentCreator = (locale: Locale) => this._createToolbarComponent(locale);
 
-        componentFactory.add('nvmediaInsert', componentCreator);
+        editor.ui.componentFactory.add('nvmediaInsert', componentCreator);
+        editor.ui.componentFactory.add('insertNVMedia', componentCreator);
     }
 
     /**
-    * Nhận các tích hợp
+    * Đăng kí các tích hợp
     */
     public registerIntegration({
         name,
@@ -131,6 +128,7 @@ export default class NVMediaInsertUI extends Plugin {
         const editor = this.editor;
         const t = locale.t;
 
+        // Lấy phương thức chèn media đã tích hợp không có thì dừng
         const integrations = this._prepareIntegrations();
         if (!integrations.length) {
             return null as any;

@@ -8,9 +8,17 @@
  */
 
 import type {
-    Element
+    Element,
+    ViewElement,
+    DocumentSelection,
+    Selection,
+    DocumentFragment,
+    DowncastWriter,
+    Model,
+    Position,
 } from 'ckeditor5/src/engine.js';
-import { Plugin } from 'ckeditor5/src/core.js';
+import { Plugin, type Editor } from 'ckeditor5/src/core.js';
+import { findOptimalInsertionRange, toWidget } from 'ckeditor5/src/widget.js';
 
 export default class NVMediaUtils extends Plugin {
     /**
@@ -20,8 +28,242 @@ export default class NVMediaUtils extends Plugin {
         return 'NVMediaUtils' as const;
     }
 
-    public isMedia(modelElement?: Element | null): modelElement is Element & { name: 'video' | 'audio' } {
-        // FIXME
-        return !!modelElement && (modelElement.is('element', 'video') || modelElement.is('element', 'audio'));
+    /**
+     *
+     */
+    public insertMedia(
+        attributes: Record<string, unknown> = {},
+        selectable: Selection | Position | null = null,
+        mediaType: ('NVMediaVideo' | 'NVMediaAudio' | null) = null,
+        options: { setMediaSizes?: boolean } = {}
+    ): Element | null {
+        const editor = this.editor;
+        const model = editor.model;
+        const selection = model.document.selection;
+
+        if (!attributes.src) {
+            return null;
+        }
+
+        // Xác định loại media từ url, mặc định cho về video
+        const determinedMediaType = determineMediaTypeFromSrc(String(attributes.src), mediaType);
+
+        // Gộp các thuộc tính về làm 1
+        attributes = {
+            ...Object.fromEntries(selection.getAttributes()),
+            ...attributes
+        };
+
+        // Xóa các attr nếu không được phép trong schema
+        for (const attributeName in attributes) {
+            if (!model.schema.checkAttribute(determinedMediaType, attributeName)) {
+                delete attributes[attributeName];
+            }
+        }
+
+        // Chèn model vào
+        return model.change(writer => {
+            const mediaElement = writer.createElement(determinedMediaType, attributes);
+
+            model.insertObject(mediaElement, selectable, null, {
+                setSelection: 'on',
+                findOptimalPosition: !selectable ? 'auto' : undefined
+            });
+
+            if (mediaElement.parent) {
+                return mediaElement;
+            }
+
+            return null;
+        });
     }
+
+    /**
+     *
+     */
+    public toMediaWidget(viewElement: ViewElement, writer: DowncastWriter, label: string): ViewElement {
+        writer.setCustomProperty('media', true, viewElement);
+
+        const labelCreator = () => {
+            //const imgElement = this.findViewImgElement(viewElement)!;
+            //const altText = imgElement.getAttribute('alt');
+
+            //return altText ? `${altText} ${label}` : label;
+            return label;
+        };
+
+        return toWidget(viewElement, writer, { label: labelCreator });
+    }
+
+    /**
+     * Kiểm tra phần tử có phải là media (video, audio) không
+     */
+    public isMedia(modelElement?: Element | null): modelElement is Element & { name: 'NVMediaVideo' | 'NVMediaAudio' } {
+        return this.isMediaVideo(modelElement) || this.isMediaAudio(modelElement);
+    }
+
+    /**
+     * Kiểm tra nếu phần tử được chọn là NVMediaVideo
+     */
+    public isMediaVideo(modelElement?: Element | null): boolean {
+        return !!modelElement && modelElement.is('element', 'NVMediaVideo');
+    }
+
+    /**
+     * Kiểm tra nếu phần tử được chọn là NVMediaAudio
+     */
+    public isMediaAudio(modelElement?: Element | null): boolean {
+        return !!modelElement && modelElement.is('element', 'NVMediaAudio');
+    }
+
+    /**
+     * Kiểm tra xem media có thể chèn vào vị trí hiện tại hay không
+     *
+     * @internal
+     */
+    public isMediaAllowed(): boolean {
+        const model = this.editor.model;
+        const selection = model.document.selection;
+
+        return isMediaAllowedInParent(this.editor, selection) && isNotInsideMedia(selection);
+    }
+
+    /**
+     * Tìm thẻ video hoặc audio trong cấu trúc html media
+     */
+    public findViewMediaElement(figureView: ViewElement, mediaType: 'NVMediaVideo' | 'NVMediaAudio'): ViewElement | undefined {
+        const tagName = mediaType == 'NVMediaVideo' ? 'video' : 'audio';
+
+        if (this.isMediaView(tagName, figureView)) {
+            return figureView;
+        }
+
+        const editingView = this.editor.editing.view;
+
+        for (const { item } of editingView.createRangeIn(figureView)) {
+            if (this.isMediaView(tagName, item as ViewElement)) {
+                return item as ViewElement;
+            }
+        }
+    }
+
+    /**
+     * Xác định đối tượng ViewElement có phải là media không
+     */
+    public isMediaView(tagName: 'video' | 'audio', element?: ViewElement | null): boolean {
+        return !!element && element.is('element', tagName);
+    }
+}
+
+/**
+ * Kiểm tra xem video, audio có chèn được trong đối tượng cha đang chọn hay không
+ */
+function isMediaAllowedInParent(editor: Editor, selection: Selection | DocumentSelection): boolean {
+    const parent = getInsertMediaParent(selection, editor.model);
+
+    if (editor.model.schema.checkChild(parent as Element, 'NVMediaVideo') || editor.model.schema.checkChild(parent as Element, 'NVMediaAudio')) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Checks if selection is not placed inside an image (e.g. its caption).
+ */
+function isNotInsideMedia(selection: DocumentSelection): boolean {
+    return [...selection.focus!.getAncestors()].every(ancestor => !(ancestor.is('element', 'NVMediaVideo') || ancestor.is('element', 'NVMediaAudio')));
+}
+
+/**
+ * Returns a node that will be used to insert image with `model.insertContent`.
+ */
+function getInsertMediaParent(selection: Selection | DocumentSelection, model: Model): Element | DocumentFragment {
+    const insertionRange = findOptimalInsertionRange(selection, model);
+    const parent = insertionRange.start.parent;
+
+    if (parent.isEmpty && !parent.is('element', '$root')) {
+        return parent.parent!;
+    }
+
+    return parent;
+}
+
+/**
+ * Xác định loại video hay audio sẽ chèn vào vị trí đó
+ */
+/*
+function determineMediaTypeForInsertion(
+    editor: Editor,
+    selectable: Position, // | Selection | DocumentSelection
+    mediaType: 'NVMediaVideo' | 'NVMediaAudio' | null
+): 'NVMediaVideo' | 'NVMediaAudio' {
+    const schema = editor.model.schema;
+
+    // Nếu chỉ định luôn thì trả về cái được chỉ định
+    if (mediaType) {
+        return mediaType;
+    }
+
+    // Đang chọn 1 đối tượng thì trả về tùy vào đối tượng đó
+    //if (selectable.is('selection')) {
+    //    return determineMediaTypeForInsertionAtSelection(schema, selectable);
+    //}
+
+    // Cuối cùng kiểm tra trong nó có audio thì chèn audio mà trong có video thì chèn video
+    return schema.checkChild(selectable, 'NVMediaAudio') ? 'NVMediaAudio' : 'NVMediaVideo';
+}
+*/
+//determineMediaTypeFromSrc
+
+/**
+ * Xác định loại video hay audio sẽ chèn vào tùy thuộc vào định dạng
+ */
+function determineMediaTypeFromSrc(
+    src: string,
+    mediaType: 'NVMediaVideo' | 'NVMediaAudio' | null
+): 'NVMediaVideo' | 'NVMediaAudio' {
+    if (mediaType) {
+        return mediaType;
+    }
+
+    const ext = getFileExtension(src);
+    if (extIsAudio(ext)) {
+        return 'NVMediaAudio';
+    }
+    if (extIsVideo(ext)) {
+        return 'NVMediaVideo';
+    }
+
+    return 'NVMediaVideo';
+}
+
+/**
+ * Lấy phần mở rộng từ url
+ */
+function getFileExtension(fileName: string): string {
+    const extensionRegExp = /\.(?<ext>[^.]+)$/;
+    const match = fileName.match(extensionRegExp);
+
+    return match!.groups!.ext.toLowerCase();
+}
+
+/**
+ * Kiểm tra phần mở rộng có phải tập video hay không
+ */
+function extIsVideo(ext: string): boolean {
+    const listVideoExts = [
+        'mp4', 'mov', 'webm', 'ogg', '3gp', 'mpeg'
+    ];
+    return listVideoExts.includes(ext);
+}
+
+/**
+ * Kiểm tra phần mở rộng có phải tập âm thanh hay không
+ */
+function extIsAudio(ext: string): boolean {
+    const listAudioExts = [
+        'mp3', 'wav', 'flac', 'aac'
+    ];
+    return listAudioExts.includes(ext);
 }
