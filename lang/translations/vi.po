@@ -27,3 +27,7 @@ msgstr "Chèn đa phương tiện"
 msgctxt "Thay thế đa phương tiện."
 msgid "Update media URL"
 msgstr "Thay thế đa phương tiện"
+
+msgctxt "Tên của widget media."
+msgid "Media widget"
+msgstr "Tiện ích video và audio"

@@ -12,6 +12,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-msgctxt "Test lang."
-msgid "nvmedia test"
-msgstr "nvmedia test"
+msgctxt "Chèn đa phương tiện từ URL."
+msgid "Insert media via URL"
+msgstr "Вставка мультимедиа через URL"
+
+msgctxt "Cập nhật URL đa phương tiện."
+msgid "Update media URL"
+msgstr "Обновить URL-адрес мультимедиа"
+
+msgctxt "Chèn đa phương tiện."
+msgid "Insert media"
+msgstr "Вставить медиа"
+
+msgctxt "Thay thế đa phương tiện."
+msgid "Update media URL"
+msgstr "Обновить URL-адрес мультимедиа"
+
+msgctxt "Tên của widget media."
+msgid "Media widget"
+msgstr "Медиа-виджет"
