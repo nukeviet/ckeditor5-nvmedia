@@ -24,6 +24,10 @@ msgctxt "Chèn đa phương tiện."
 msgid "Insert media"
 msgstr "Insérer un média"
 
+msgctxt "Replace media"
+msgid "Replace media"
+msgstr "Remplacer le média"
+
 msgctxt "Thay thế đa phương tiện."
 msgid "Update media URL"
 msgstr "Mettre à jour l'URL du média"
