@@ -11,6 +11,7 @@ while [ -h "$SOURCE" ]; do
   fi
 done
 DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+cd "$DIR"
 DIR_PATH=$PWD
 
 find "$DIR_PATH/src" -name "*.js" -type f | xargs /bin/rm -f

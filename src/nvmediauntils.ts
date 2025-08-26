@@ -8,14 +8,14 @@
  */
 
 import type {
-    Element,
+    ModelElement,
     ViewElement,
-    DocumentSelection,
-    Selection,
-    DocumentFragment,
-    DowncastWriter,
+    ModelDocumentSelection,
+    ModelSelection,
+    ModelDocumentFragment,
+    ViewDowncastWriter,
     Model,
-    Position,
+    ModelPosition,
 } from 'ckeditor5/src/engine.js';
 import { Plugin, type Editor } from 'ckeditor5/src/core.js';
 import { findOptimalInsertionRange, toWidget } from 'ckeditor5/src/widget.js';
@@ -33,10 +33,10 @@ export default class NVMediaUtils extends Plugin {
      */
     public insertMedia(
         attributes: Record<string, unknown> = {},
-        selectable: Selection | Position | null = null,
+        selectable: ModelSelection | ModelPosition | null = null,
         mediaType: ('NVMediaVideo' | 'NVMediaAudio' | null) = null,
         options: { setMediaSizes?: boolean } = {}
-    ): Element | null {
+    ): ModelElement | null {
         const editor = this.editor;
         const model = editor.model;
         const selection = model.document.selection;
@@ -81,7 +81,7 @@ export default class NVMediaUtils extends Plugin {
     /**
      *
      */
-    public toMediaWidget(viewElement: ViewElement, writer: DowncastWriter, label: string): ViewElement {
+    public toMediaWidget(viewElement: ViewElement, writer: ViewDowncastWriter, label: string): ViewElement {
         writer.setCustomProperty('media', true, viewElement);
 
         const labelCreator = () => {
@@ -98,21 +98,21 @@ export default class NVMediaUtils extends Plugin {
     /**
      * Kiểm tra phần tử có phải là media (video, audio) không
      */
-    public isMedia(modelElement?: Element | null): modelElement is Element & { name: 'NVMediaVideo' | 'NVMediaAudio' } {
+    public isMedia(modelElement?: ModelElement | null): modelElement is ModelElement & { name: 'NVMediaVideo' | 'NVMediaAudio' } {
         return this.isMediaVideo(modelElement) || this.isMediaAudio(modelElement);
     }
 
     /**
      * Kiểm tra nếu phần tử được chọn là NVMediaVideo
      */
-    public isMediaVideo(modelElement?: Element | null): boolean {
+    public isMediaVideo(modelElement?: ModelElement | null): boolean {
         return !!modelElement && modelElement.is('element', 'NVMediaVideo');
     }
 
     /**
      * Kiểm tra nếu phần tử được chọn là NVMediaAudio
      */
-    public isMediaAudio(modelElement?: Element | null): boolean {
+    public isMediaAudio(modelElement?: ModelElement | null): boolean {
         return !!modelElement && modelElement.is('element', 'NVMediaAudio');
     }
 
@@ -162,10 +162,10 @@ export default class NVMediaUtils extends Plugin {
 /**
  * Kiểm tra xem video, audio có chèn được trong đối tượng cha đang chọn hay không
  */
-function isMediaAllowedInParent(editor: Editor, selection: Selection | DocumentSelection): boolean {
+function isMediaAllowedInParent(editor: Editor, selection: ModelSelection | ModelDocumentSelection): boolean {
     const parent = getInsertMediaParent(selection, editor.model);
 
-    if (editor.model.schema.checkChild(parent as Element, 'NVMediaVideo') || editor.model.schema.checkChild(parent as Element, 'NVMediaAudio')) {
+    if (editor.model.schema.checkChild(parent as ModelElement, 'NVMediaVideo') || editor.model.schema.checkChild(parent as ModelElement, 'NVMediaAudio')) {
         return true;
     }
 
@@ -175,14 +175,14 @@ function isMediaAllowedInParent(editor: Editor, selection: Selection | DocumentS
 /**
  * Checks if selection is not placed inside an image (e.g. its caption).
  */
-function isNotInsideMedia(selection: DocumentSelection): boolean {
+function isNotInsideMedia(selection: ModelDocumentSelection): boolean {
     return [...selection.focus!.getAncestors()].every(ancestor => !(ancestor.is('element', 'NVMediaVideo') || ancestor.is('element', 'NVMediaAudio')));
 }
 
 /**
  * Returns a node that will be used to insert image with `model.insertContent`.
  */
-function getInsertMediaParent(selection: Selection | DocumentSelection, model: Model): Element | DocumentFragment {
+function getInsertMediaParent(selection: ModelSelection | ModelDocumentSelection, model: Model): ModelElement | ModelDocumentFragment {
     const insertionRange = findOptimalInsertionRange(selection, model);
     const parent = insertionRange.start.parent;
 
@@ -199,7 +199,7 @@ function getInsertMediaParent(selection: Selection | DocumentSelection, model: M
 /*
 function determineMediaTypeForInsertion(
     editor: Editor,
-    selectable: Position, // | Selection | DocumentSelection
+    selectable: ModelPosition, // | Selection | ModelDocumentSelection
     mediaType: 'NVMediaVideo' | 'NVMediaAudio' | null
 ): 'NVMediaVideo' | 'NVMediaAudio' {
     const schema = editor.model.schema;

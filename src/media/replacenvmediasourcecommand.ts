@@ -9,7 +9,7 @@
 
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import type NVMediaUtils from '../nvmediauntils.js';
-import type { Writer, Element } from 'ckeditor5/src/engine.js';
+import type { ModelWriter, ModelElement } from 'ckeditor5/src/engine.js';
 
 /**
  * Lệnh thay src của video, audio thành src khác.
@@ -55,7 +55,7 @@ export default class ReplaceNVMediaSourceCommand extends Command {
         });
     }
 
-    public cleanupMedia(writer: Writer, media: Element): void {
+    public cleanupMedia(writer: ModelWriter, media: ModelElement): void {
         //writer.removeAttribute('srcset', media);
         //writer.removeAttribute('sizes', media);
         //writer.removeAttribute('sources', media);

@@ -7,7 +7,7 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { icons } from 'ckeditor5/src/core.js';
+import { IconCheck, IconCancel } from '@ckeditor/ckeditor5-icons';
 import {
     ButtonView,
     View,
@@ -199,7 +199,7 @@ export default class NVMediaInsertUrlView extends View {
         const insertButtonView = new ButtonView(locale);
 
         insertButtonView.set({
-            icon: icons.check,
+            icon: IconCheck,
             class: 'ck-button-save',
             type: 'submit',
             withText: true
@@ -225,7 +225,7 @@ export default class NVMediaInsertUrlView extends View {
 
         cancelButtonView.set({
             label: t('Cancel'),
-            icon: icons.cancel,
+            icon: IconCancel,
             class: 'ck-button-cancel',
             withText: true
         });

@@ -9,7 +9,7 @@
 
 import type {
 	DowncastDispatcher,
-	Element,
+	ModelElement,
 	UpcastDispatcher,
 	UpcastElementEvent,
 	DowncastAttributeEvent
@@ -25,7 +25,7 @@ export function downcastMediaAttribute(
 	mediaType: 'NVMediaVideo' | 'NVMediaAudio',
 	attributeKey: string
 ): (dispatcher: DowncastDispatcher) => void {
-	const converter: GetCallback<DowncastAttributeEvent<Element>> = (evt, data, conversionApi) => {
+	const converter: GetCallback<DowncastAttributeEvent<ModelElement>> = (evt, data, conversionApi) => {
 		if (!conversionApi.consumable.consume(data.item, evt.name)) {
 			return;
 		}
@@ -38,7 +38,7 @@ export function downcastMediaAttribute(
 	};
 
 	return dispatcher => {
-		dispatcher.on<DowncastAttributeEvent<Element>>(`attribute:${attributeKey}:${mediaType}`, converter);
+		dispatcher.on<DowncastAttributeEvent<ModelElement>>(`attribute:${attributeKey}:${mediaType}`, converter);
 	};
 }
 
@@ -67,7 +67,7 @@ export function upcastMediaFigure(mediaUtils: NVMediaUtils, mediaType: 'NVMediaV
 		const conversionResult = conversionApi.convertItem(viewMedia, data.modelCursor);
 
 		// Lấy model được chuyển đổi
-		const modelMedia = first(conversionResult.modelRange!.getItems()) as Element;
+		const modelMedia = first(conversionResult.modelRange!.getItems()) as ModelElement;
 
 		// Chuyển không thành công thì dừng
 		if (!modelMedia) {

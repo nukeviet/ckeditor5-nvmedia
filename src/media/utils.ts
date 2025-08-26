@@ -8,19 +8,16 @@
  */
 
 import type {
-	DocumentSelection,
 	MatcherPattern,
-	Schema,
-	Selection,
 	ViewContainerElement,
-	DowncastWriter,
+	ViewDowncastWriter,
 	ViewElement
 } from 'ckeditor5/src/engine.js';
 import type { Editor } from 'ckeditor5/src/core.js';
 import { first } from 'ckeditor5/src/utils.js';
 import NVMediaUtils from '../nvmediauntils.js';
 
-export function createMediaViewElement(writer: DowncastWriter, mediaType: 'NVMediaVideo' | 'NVMediaAudio'): ViewContainerElement {
+export function createMediaViewElement(writer: ViewDowncastWriter, mediaType: 'NVMediaVideo' | 'NVMediaAudio'): ViewContainerElement {
 	if (mediaType == 'NVMediaAudio') {
 		return writer.createContainerElement('figure', { class: 'nv-media' }, [
 			writer.createEmptyElement('audio', { controls: '' })
