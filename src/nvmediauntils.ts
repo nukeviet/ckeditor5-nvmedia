@@ -16,9 +16,9 @@ import type {
     ViewDowncastWriter,
     Model,
     ModelPosition,
-} from 'ckeditor5/src/engine.js';
-import { Plugin, type Editor } from 'ckeditor5/src/core.js';
-import { findOptimalInsertionRange, toWidget } from 'ckeditor5/src/widget.js';
+} from 'ckeditor5';
+import { Plugin, type Editor } from 'ckeditor5';
+import { findOptimalInsertionRange, toWidget } from 'ckeditor5';
 
 export default class NVMediaUtils extends Plugin {
     /**

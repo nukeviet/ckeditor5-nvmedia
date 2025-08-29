@@ -12,9 +12,9 @@ import type {
 	ViewContainerElement,
 	ViewDowncastWriter,
 	ViewElement
-} from 'ckeditor5/src/engine.js';
-import type { Editor } from 'ckeditor5/src/core.js';
-import { first } from 'ckeditor5/src/utils.js';
+} from 'ckeditor5';
+import type { Editor } from 'ckeditor5';
+import { first } from 'ckeditor5';
 import NVMediaUtils from '../nvmediauntils.js';
 
 export function createMediaViewElement(writer: ViewDowncastWriter, mediaType: 'NVMediaVideo' | 'NVMediaAudio'): ViewContainerElement {

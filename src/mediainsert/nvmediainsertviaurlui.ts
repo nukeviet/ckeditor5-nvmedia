@@ -7,8 +7,8 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { Plugin } from 'ckeditor5/src/core.js';
-import { ButtonView, CollapsibleView, DropdownButtonView, type FocusableView } from 'ckeditor5/src/ui.js';
+import { Plugin } from 'ckeditor5';
+import { ButtonView, CollapsibleView, DropdownButtonView, type FocusableView } from 'ckeditor5';
 
 import mediaIcon from '../../theme/icons/media.svg';
 

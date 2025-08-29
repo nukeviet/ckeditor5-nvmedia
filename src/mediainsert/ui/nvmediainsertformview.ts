@@ -16,8 +16,8 @@ import {
     type FocusCyclerForwardCycleEvent,
     type FocusCyclerBackwardCycleEvent,
     type FocusableView
-} from 'ckeditor5/src/ui.js';
-import { FocusTracker, KeystrokeHandler, type Locale } from 'ckeditor5/src/utils.js';
+} from 'ckeditor5';
+import { FocusTracker, KeystrokeHandler, type Locale } from 'ckeditor5';
 
 /**
  * Xử lý hiển thị khi mở dropdown nút chèn media

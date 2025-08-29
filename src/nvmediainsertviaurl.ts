@@ -7,7 +7,7 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { Plugin } from 'ckeditor5/src/core.js';
+import { Plugin } from 'ckeditor5';
 import NVMediaInsertUI from './mediainsert/nvmediainsertui.js';
 import NVMediaInsertViaUrlUI from './mediainsert/nvmediainsertviaurlui.js';
 

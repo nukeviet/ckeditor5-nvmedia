@@ -9,8 +9,8 @@
 
 /* globals window */
 
-import { Plugin } from 'ckeditor5/src/core.js';
-import { Notification } from 'ckeditor5/src/ui.js';
+import { Plugin } from 'ckeditor5';
+import { Notification } from 'ckeditor5';
 import InsertNVMediaCommand from './insertnvmediacommand.js';
 import ReplaceNVMediaSourceCommand from './replacenvmediasourcecommand.js';
 import NVMediaUtils from '../nvmediauntils.js';

@@ -7,9 +7,9 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { Command, type Editor } from 'ckeditor5/src/core.js';
+import { Command, type Editor } from 'ckeditor5';
 import type NVMediaUtils from '../nvmediauntils.js';
-import type { ModelWriter, ModelElement } from 'ckeditor5/src/engine.js';
+import type { ModelWriter, ModelElement } from 'ckeditor5';
 
 /**
  * Lệnh thay src của video, audio thành src khác.

@@ -13,8 +13,8 @@ import type {
 	UpcastDispatcher,
 	UpcastElementEvent,
 	DowncastAttributeEvent
-} from 'ckeditor5/src/engine.js';
-import { first, type GetCallback } from 'ckeditor5/src/utils.js';
+} from 'ckeditor5';
+import { first, type GetCallback } from 'ckeditor5';
 import type NVMediaUtils from '../nvmediauntils.js';
 
 /**

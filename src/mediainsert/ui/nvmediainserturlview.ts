@@ -7,7 +7,7 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { IconCheck, IconCancel } from '@ckeditor/ckeditor5-icons';
+import { IconCheck, IconCancel } from 'ckeditor5';
 import {
     ButtonView,
     View,
@@ -17,8 +17,8 @@ import {
     createLabeledInputText,
     type InputTextView,
     type FocusableView
-} from 'ckeditor5/src/ui.js';
-import { FocusTracker, KeystrokeHandler, type Locale } from 'ckeditor5/src/utils.js';
+} from 'ckeditor5';
+import { FocusTracker, KeystrokeHandler, type Locale } from 'ckeditor5';
 
 export default class NVMediaInsertUrlView extends View {
     /**

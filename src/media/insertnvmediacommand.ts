@@ -7,8 +7,8 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { Command, type Editor } from 'ckeditor5/src/core.js';
-import { toArray, type ArrayOrItem } from 'ckeditor5/src/utils.js';
+import { Command, type Editor } from 'ckeditor5';
+import { toArray, type ArrayOrItem } from 'ckeditor5';
 import NVMediaUtils from '../nvmediauntils.js';
 
 export default class InsertNVMediaCommand extends Command {
