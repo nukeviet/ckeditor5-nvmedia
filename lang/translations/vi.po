@@ -7,7 +7,6 @@
 #
 msgid ""
 msgstr ""
-"Language-Team: Vietnamese (https://nukeviet.vn/)\n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Content-Type: text/plain; charset=UTF-8\n"

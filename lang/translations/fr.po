@@ -7,9 +7,8 @@
 #
 msgid ""
 msgstr ""
-"Language-Team: Français (https://nukeviet.vn/)\n"
 "Language: fr\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n <= -2 || n >= 2);\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
 msgctxt "Chèn đa phương tiện từ URL."

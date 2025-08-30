@@ -1,0 +1,16 @@
+{
+  "plugins": [
+    {
+      "name": "NVMedia",
+      "className": "NVMedia",
+      "description": "Integrate a button to insert media into the editor.",
+      "path": "src/nvmedia.ts"
+    },
+    {
+      "name": "NVMediaInsert",
+      "className": "NVMediaInsert",
+      "description": "Command to insert media, similar to inserting images.",
+      "path": "src/nvmediainsert.ts"
+    }
+  ]
+}
