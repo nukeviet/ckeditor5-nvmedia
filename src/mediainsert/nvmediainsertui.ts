@@ -9,20 +9,16 @@
 
 import {
     Plugin,
-    type Editor
-} from 'ckeditor5';
-import {
     createDropdown,
     SplitButtonView,
     ButtonView,
+    logWarning,
+    type Editor,
     type DropdownView,
     type DropdownButtonView,
-    type FocusableView
-} from 'ckeditor5';
-import {
-    logWarning,
+    type FocusableView,
     type Observable,
-    type Locale,
+    type Locale
 } from 'ckeditor5';
 
 import NVMediaInsertFormView from './ui/nvmediainsertformview.js';

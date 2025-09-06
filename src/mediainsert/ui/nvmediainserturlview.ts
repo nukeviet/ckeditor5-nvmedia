@@ -27,16 +27,6 @@ export default class NVMediaInsertUrlView extends View {
     public urlInputView: LabeledFieldView<InputTextView>;
 
     /**
-     * Nút chèn, cập nhật
-     */
-    public insertButtonView: ButtonView;
-
-    /**
-     * Nút hủy
-     */
-    public cancelButtonView: ButtonView;
-
-    /**
      * Giá trị url media đã nhập
      *
      * @observable
@@ -103,13 +93,9 @@ export default class NVMediaInsertUrlView extends View {
         });
 
         this.urlInputView = this._createUrlInputView();
-        this.insertButtonView = this._createInsertButton();
-        this.cancelButtonView = this._createCancelButton();
 
         this._focusables.addMany([
-            this.urlInputView,
-            this.insertButtonView,
-            this.cancelButtonView
+            this.urlInputView
         ]);
 
         this.setTemplate({
@@ -131,12 +117,7 @@ export default class NVMediaInsertUrlView extends View {
                             'ck',
                             'ck-image-insert-url__action-row'
                         ]
-                    },
-
-                    children: [
-                        this.insertButtonView,
-                        this.cancelButtonView
-                    ]
+                    }
                 }
             ]
         });

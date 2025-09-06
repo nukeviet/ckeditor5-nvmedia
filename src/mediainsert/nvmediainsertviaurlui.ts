@@ -7,8 +7,8 @@
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-import { Plugin } from 'ckeditor5';
-import { ButtonView, CollapsibleView, DropdownButtonView, type FocusableView } from 'ckeditor5';
+import { Plugin, MenuBarMenuListItemButtonView } from 'ckeditor5';
+import { ButtonView } from 'ckeditor5';
 
 import mediaIcon from '../../theme/icons/media.svg';
 
@@ -16,10 +16,11 @@ import NVMediaInsertUI from './nvmediainsertui.js';
 
 import type ReplaceNVMediaSourceCommand from '../media/replacenvmediasourcecommand.js';
 import type InsertNVMediaCommand from '../media/insertnvmediacommand.js';
-import NVMediaInsertUrlView, { type NVMediaInsertUrlViewSubmitEvent, NVMediaInsertUrlViewCancelEvent } from './ui/nvmediainserturlview.js';
+import NVMediaInsertUrlView from './ui/nvmediainserturlview.js';
 
 export default class NVMediaInsertViaUrlUI extends Plugin {
     private _mediaInsertUI!: NVMediaInsertUI;
+    private _formView?: NVMediaInsertUrlView;
 
     /**
      * @inheritDoc
@@ -43,100 +44,133 @@ export default class NVMediaInsertViaUrlUI extends Plugin {
         this._mediaInsertUI.registerIntegration({
             name: 'url',
             observable: () => this.editor.commands.get('insertNVMedia')!,
-            requiresForm: true,
-            buttonViewCreator: isOnlyOne => this._createInsertUrlButton(isOnlyOne),
-            formViewCreator: isOnlyOne => this._createInsertUrlView(isOnlyOne)
+            buttonViewCreator: () => this._createToolbarButton(),
+            formViewCreator: () => this._createDropdownButton(),
         });
     }
 
     /**
      * @inheritDoc
      */
-    private _createInsertUrlView(isOnlyOne: boolean): FocusableView {
+    private _createInsertUrlView(): NVMediaInsertUrlView {
         const editor = this.editor;
         const locale = editor.locale;
-        const t = locale.t;
 
         const replaceNVMediaSourceCommand: ReplaceNVMediaSourceCommand = editor.commands.get('replaceNVMediaSource')!;
         const insertNVMediaCommand: InsertNVMediaCommand = editor.commands.get('insertNVMedia')!;
 
         const mediaInsertUrlView = new NVMediaInsertUrlView(locale);
-        const collapsibleView = isOnlyOne ? null : new CollapsibleView(locale, [mediaInsertUrlView]);
 
         mediaInsertUrlView.bind('isMediaSelected').to(this._mediaInsertUI);
         mediaInsertUrlView.bind('isEnabled').toMany([insertNVMediaCommand, replaceNVMediaSourceCommand], 'isEnabled', (...isEnabled) => (
             isEnabled.some(isCommandEnabled => isCommandEnabled)
         ));
 
-        // Set initial value because integrations are created on first dropdown open.
-        mediaInsertUrlView.mediaURLInputValue = replaceNVMediaSourceCommand.value || '';
-
-        this._mediaInsertUI.dropdownView!.on('change:isOpen', () => {
-            if (this._mediaInsertUI.dropdownView!.isOpen) {
-                mediaInsertUrlView.mediaURLInputValue = replaceNVMediaSourceCommand.value || '';
-
-                if (collapsibleView) {
-                    collapsibleView.isCollapsed = true;
-                }
-            }
-        }, { priority: 'low' });
-
-        mediaInsertUrlView.on<NVMediaInsertUrlViewSubmitEvent>('submit', () => {
-            if (replaceNVMediaSourceCommand.isEnabled) {
-                editor.execute('replaceNVMediaSource', { source: mediaInsertUrlView.mediaURLInputValue });
-            } else {
-                editor.execute('insertNVMedia', { source: mediaInsertUrlView.mediaURLInputValue });
-            }
-
-            this._closePanel();
-        });
-
-        mediaInsertUrlView.on<NVMediaInsertUrlViewCancelEvent>('cancel', () => this._closePanel());
-
-        if (collapsibleView) {
-            collapsibleView.set({
-                isCollapsed: true
-            });
-
-            collapsibleView.bind('label').to(this._mediaInsertUI, 'isMediaSelected', isMediaSelected => isMediaSelected ?
-                t('Update media URL') :
-                t('Insert media via URL')
-            );
-
-            return collapsibleView;
-        }
-
         return mediaInsertUrlView;
     }
 
     /**
-     * Nút chèn media
+     * Hiển thị Dialog chèn media qua URL
      */
-    private _createInsertUrlButton(isOnlyOne: boolean): ButtonView {
-        const ButtonClass = isOnlyOne ? DropdownButtonView : ButtonView;
-
+    private _showModal() {
         const editor = this.editor;
-        const button = new ButtonClass(editor.locale);
-        const t = editor.locale.t;
+        const locale = editor.locale;
+        const t = locale.t;
+        const dialog = editor.plugins.get('Dialog');
 
-        button.set({
-            icon: mediaIcon,
-            tooltip: true
+        if (!this._formView) {
+            this._formView = this._createInsertUrlView();
+            this._formView.on('submit', () => this._handleSave());
+        }
+
+        const replaceNVMediaSourceCommand = editor.commands.get('replaceNVMediaSource')!;
+        this._formView.mediaURLInputValue = replaceNVMediaSourceCommand.value || '';
+
+        dialog.show({
+            id: 'insertNVMediaViaUrl',
+            title: t('Media via URL'),
+            isModal: true,
+            content: this._formView,
+            actionButtons: [
+                {
+                    label: t('Cancel'),
+                    withText: true,
+                    onExecute: () => dialog.hide()
+                },
+                {
+                    label: this._mediaInsertUI.isMediaSelected ? t('Save') : t('Insert'),
+                    class: 'ck-button-action',
+                    withText: true,
+                    onExecute: () => this._handleSave()
+                }
+            ]
+        });
+    }
+
+    /**
+	 * Tạo nút chèn media, loại nút tùy thuộc vị trí chèn: Chèn vào toolbar hay menu bar
+	 */
+    private _createInsertUrlButton<T extends typeof ButtonView | typeof MenuBarMenuListItemButtonView>(
+        ButtonClass: T
+    ): InstanceType<T> {
+        const button = new ButtonClass(this.editor.locale) as InstanceType<T>;
+
+        button.icon = mediaIcon;
+        button.on('execute', () => {
+            this._showModal();
         });
 
-        button.bind('label').to(this._mediaInsertUI, 'isMediaSelected', isMediaSelected => isMediaSelected ?
-            t('Update media URL') :
-            t('Insert media via URL')
+        return button;
+    }
+
+    /**
+     * Creates the toolbar button for inserting media via URL: icon and tooltip.
+     *
+     * @returns ButtonView
+     */
+    private _createToolbarButton(): ButtonView {
+        const t = this.editor.locale.t;
+        const button = this._createInsertUrlButton(ButtonView);
+
+        button.tooltip = true;
+        button.bind('label').to(
+            this._mediaInsertUI,
+            'isMediaSelected',
+            isMediaSelected => isMediaSelected ? t('Update media URL') : t('Insert media via URL')
         );
 
         return button;
     }
 
     /**
-     * Closes the dropdown.
+     * @returns ButtonView
      */
-    private _closePanel(): void {
-        this.editor.editing.view.focus();
-        this._mediaInsertUI.dropdownView!.isOpen = false;
+    private _createDropdownButton(): ButtonView {
+        const t = this.editor.locale.t;
+        const button = this._createInsertUrlButton(ButtonView);
+
+        button.withText = true;
+        button.bind('label').to(
+            this._mediaInsertUI,
+            'isMediaSelected',
+            isMediaSelected => isMediaSelected ? t('Update media URL') : t('Insert via URL')
+        );
+
+        return button;
+    }
+
+    /**
+     * Xử lý khi ấn nút Lưu trong Dialog chèn media qua URL
+     */
+    private _handleSave() {
+        const replaceNVMediaSourceCommand = this.editor.commands.get('replaceNVMediaSource')!;
+
+        if (replaceNVMediaSourceCommand.isEnabled) {
+            this.editor.execute('replaceNVMediaSource', { source: this._formView!.mediaURLInputValue });
+        } else {
+            this.editor.execute('insertNVMedia', { source: this._formView!.mediaURLInputValue });
+        }
+
+        this.editor.plugins.get('Dialog').hide();
     }
 }

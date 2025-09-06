@@ -34,3 +34,11 @@ msgstr "Update media URL"
 msgctxt "Tên của widget media."
 msgid "Media widget"
 msgstr "Media widget"
+
+msgctxt "Insert via URL"
+msgid "Insert via URL"
+msgstr "Insert via URL"
+
+msgctxt "Media via URL"
+msgid "Media via URL"
+msgstr "Media via URL"

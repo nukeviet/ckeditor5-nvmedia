@@ -27,10 +27,18 @@ msgctxt "Replace media"
 msgid "Replace media"
 msgstr "Thay thế đa phương tiện"
 
-msgctxt "Thay thế đa phương tiện."
+msgctxt "Cập nhật bằng URL"
 msgid "Update media URL"
-msgstr "Thay thế đa phương tiện"
+msgstr "Cập nhật bằng URL"
 
 msgctxt "Tên của widget media."
 msgid "Media widget"
 msgstr "Tiện ích video và audio"
+
+msgctxt "Insert via URL"
+msgid "Insert via URL"
+msgstr "Chèn từ URL"
+
+msgctxt "Media via URL"
+msgid "Media via URL"
+msgstr "Đa phương tiện từ URL"
