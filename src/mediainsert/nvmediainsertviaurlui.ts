@@ -10,7 +10,7 @@
 import { Plugin, MenuBarMenuListItemButtonView } from 'ckeditor5';
 import { ButtonView } from 'ckeditor5';
 
-import mediaIcon from '../../theme/icons/media.svg';
+import mediaLinkIcon from '../../theme/icons/media-link.svg';
 
 import NVMediaInsertUI from './nvmediainsertui.js';
 
@@ -115,7 +115,7 @@ export default class NVMediaInsertViaUrlUI extends Plugin {
     ): InstanceType<T> {
         const button = new ButtonClass(this.editor.locale) as InstanceType<T>;
 
-        button.icon = mediaIcon;
+        button.icon = mediaLinkIcon;
         button.on('execute', () => {
             this._showModal();
         });
