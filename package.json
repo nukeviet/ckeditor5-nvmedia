@@ -1,6 +1,6 @@
 {
   "name": "@nukeviet/ckeditor5-nvmedia",
-  "version": "46.1.1",
+  "version": "47.0.0",
   "description": "Insert audio and media for NukeViet.",
   "keywords": [
     "nukeviet",
@@ -16,7 +16,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "peerDependencies": {
-    "ckeditor5": "46.1.1"
+    "ckeditor5": "47.0.0"
   },
   "exports": {
     ".": {
