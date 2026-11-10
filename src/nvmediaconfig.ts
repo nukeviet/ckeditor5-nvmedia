@@ -1,8 +1,8 @@
 /**
  * NukeViet NVMedia for CKEditor5
- * @version 4.x
+ * @version 5.x
  * @author VINADES.,JSC <contact@vinades.vn>
- * @copyright (C) 2009-2024 VINADES.,JSC. All rights reserved
+ * @copyright (C) 2009-2026 VINADES.,JSC. All rights reserved
  * @license GNU/GPL version 2 or any later version
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
@@ -26,17 +26,18 @@
  * ```
  */
 export interface NVMediaConfig {
-    /*
+
+	/*
      *
      */
-    browseUrl?: string;
+	browseUrl?: string;
 
-    /*
+	/*
      *
      */
-    options?: NVMediaOptions;
+	options?: NVMediaOptions;
 
-    insert?: NVMediaInsertConfig;
+	insert?: NVMediaInsertConfig;
 }
 
 export interface NVMediaOptions extends Record<string, unknown> {
@@ -44,5 +45,5 @@ export interface NVMediaOptions extends Record<string, unknown> {
 }
 
 export interface NVMediaInsertConfig {
-    integrations?: Array<string>;
+	integrations?: Array<string>;
 }

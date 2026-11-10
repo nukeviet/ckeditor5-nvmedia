@@ -1,0 +1,8 @@
+/*
+ * CKEditor 5 đặt cứng `width: 400px` cho form chèn từ URL (dùng chung cho "Hình ảnh bằng URL"
+ * và "Đa phương tiện từ URL"), trên màn hình hẹp form tràn khỏi hộp thoại làm vỡ ô input.
+ * Giới hạn lại theo bề rộng hộp thoại.
+ */
+.ck.ck-image-insert-url {
+	max-inline-size: 100%;
+}
